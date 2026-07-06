@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PR | Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0a0b10;
+    --bg-soft: #12141c;
+    --ink: #f1f2f7;
+    --ink-dim: #8a8fa3;
+    --violet: #8b6bff;
+    --cyan: #3fe0ff;
+    --coral: #ff6b6b;
+    --line: rgba(241,242,247,0.08);
+    --gradient: linear-gradient(115deg, var(--violet), var(--cyan) 55%, var(--coral));
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    overflow-x:hidden;
+  }
+
+  /* ---------- INTRO ---------- */
+  #intro{
+    position:fixed; inset:0; z-index:100;
+    background: var(--bg);
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden;
+  }
+
+  #intro::before{
+    content:'';
+    position:absolute; width:140vmax; height:140vmax;
+    background: radial-gradient(circle, rgba(139,107,255,0.18), transparent 60%);
+    animation: rotate 12s linear infinite;
+  }
+
+  @keyframes rotate{
+    from{ transform: rotate(0deg); }
+    to{ transform: rotate(360deg); }
+  }
+
+  .pr-text{
+    position:relative;
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size: clamp(5rem, 22vw, 14rem);
+    letter-spacing: 0.02em;
+    background: var(--gradient);
+    background-size: 300% 300%;
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    opacity:0;
+    filter: blur(14px);
+    animation:
+      prReveal 1.4s cubic-bezier(.16,1,.3,1) 0.2s forwards,
+      prShift 3s ease-in-out infinite;
+  }
+
+  @keyframes prReveal{
+    0%{ opacity:0; filter: blur(20px); letter-spacing: 0.4em; transform: scale(0.85); }
+    100%{ opacity:1; filter: blur(0px); letter-spacing: 0.02em; transform: scale(1); }
+  }
+
+  @keyframes prShift{
+    0%,100%{ background-position: 0% 50%; }
+    50%{ background-position: 100% 50%; }
+  }
+
+  .pr-beam{
+    position:absolute;
+    width:1px; height:0;
+    background: linear-gradient(180deg, transparent, var(--cyan), transparent);
+    opacity:0.6;
+    animation: beamDrop 1.6s ease-out forwards;
+  }
+  @keyframes beamDrop{
+    0%{ height:0; opacity:0; }
+    40%{ opacity:0.8; }
+    100%{ height:70vh; opacity:0; }
+  }
+
+  .pr-tagline{
+    position:absolute;
+    bottom: 14%;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.35em;
+    text-transform:uppercase;
+    color: var(--ink-dim);
+    opacity:0;
+    animation: fadeUp 1s ease forwards 1.3s;
+  }
+
+  @keyframes fadeUp{
+    0%{ opacity:0; transform: translateY(12px); }
+    100%{ opacity:1; transform: translateY(0); }
+  }
+
+  #intro.leave{
+    animation: introLeave 0.9s cubic-bezier(.7,0,.3,1) forwards;
+    pointer-events:none;
+  }
+  @keyframes introLeave{
+    0%{ opacity:1; }
+    100%{ opacity:0; transform: scale(1.04); }
+  }
+
+  /* ---------- MAIN ---------- */
+  main{
+    opacity:0;
+  }
+  main.show{
+    animation: mainFade 1s ease forwards;
+  }
+  @keyframes mainFade{
+    0%{ opacity:0; transform: translateY(16px); }
+    100%{ opacity:1; transform: translateY(0); }
+  }
+
+  header.hero{
+    min-height: 60vh;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    text-align:center;
+    padding: 4rem 1.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.7rem;
+    letter-spacing:0.3em;
+    text-transform:uppercase;
+    color: var(--ink-dim);
+    margin-bottom:1.2rem;
+  }
+
+  h1{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:500;
+    font-size: clamp(2rem, 6vw, 3.6rem);
+    line-height:1.15;
+    max-width: 18ch;
+  }
+
+  h1 span{
+    background: var(--gradient);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+
+  .hero p{
+    margin-top:1.4rem;
+    color: var(--ink-dim);
+    font-size:1rem;
+    max-width: 42ch;
+  }
+
+  /* ---------- GALLERY ---------- */
+  .gallery{
+    display:flex;
+    flex-direction:column;
+  }
+
+  .frame{
+    position:relative;
+    width:100%;
+    padding: 3.5rem 1.5rem;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    border-bottom: 1px solid var(--line);
+    opacity:0;
+    transform: translateY(40px);
+    transition: opacity 0.9s cubic-bezier(.16,1,.3,1), transform 0.9s cubic-bezier(.16,1,.3,1);
+  }
+
+  .frame.visible{
+    opacity:1;
+    transform: translateY(0);
+  }
+
+  .frame .index{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.2em;
+    color: var(--ink-dim);
+    margin-bottom:1.4rem;
+  }
+
+  .frame .index em{
+    font-style:normal;
+    color: var(--cyan);
+  }
+
+  .img-wrap{
+    position:relative;
+    width:100%;
+    max-width: 720px;
+    border-radius: 18px;
+    overflow:hidden;
+    background: var(--bg-soft);
+    box-shadow: 0 30px 80px -30px rgba(0,0,0,0.7);
+  }
+
+  .img-wrap::after{
+    content:'';
+    position:absolute; inset:0;
+    background: linear-gradient(200deg, rgba(139,107,255,0.12), transparent 40%);
+    pointer-events:none;
+  }
+
+  .img-wrap img{
+    width:100%;
+    display:block;
+    object-fit:cover;
+  }
+
+  footer{
+    padding: 3rem 1.5rem 4rem;
+    text-align:center;
+    color: var(--ink-dim);
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.15em;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *, *::before, *::after{
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <div id="intro">
+    <span class="pr-beam" style="left:35%; animation-delay:0.1s;"></span>
+    <span class="pr-beam" style="left:50%; animation-delay:0.3s;"></span>
+    <span class="pr-beam" style="left:65%; animation-delay:0.5s;"></span>
+    <div class="pr-text">PR</div>
+    <div class="pr-tagline">Welcome to my portfolio</div>
+  </div>
+
+  <main id="main">
+    <header class="hero">
+      <div class="eyebrow">Wish List</div>
+      <h1>PRの<span>ほしい物リスト</span></h1>
+      <p>下にスクロールして、気になるアイテムをひとつずつご覧ください。</p>
+    </header>
+
+    <section class="gallery">
+      <div class="frame" data-index="01">
+        <div class="index">IMAGE <em>01</em></div>
+        <div class="img-wrap">
+          <img src="IMG_8582.png" alt="写真 1">
+        </div>
+      </div>
+
+      <div class="frame" data-index="02">
+        <div class="index">IMAGE <em>02</em></div>
+        <div class="img-wrap">
+          <img src="IMG_8583.png" alt="写真 2">
+        </div>
+      </div>
+
+      <div class="frame" data-index="03">
+        <div class="index">IMAGE <em>03</em></div>
+        <div class="img-wrap">
+          <img src="IMG_8584.png" alt="写真 3">
+        </div>
+      </div>
+
+      <div class="frame" data-index="04">
+        <div class="index">IMAGE <em>04</em></div>
+        <div class="img-wrap">
+          <img src="IMG_8585.png" alt="写真 4">
+        </div>
+      </div>
+
+      <div class="frame" data-index="05">
+        <div class="index">IMAGE <em>05</em></div>
+        <div class="img-wrap">
+          <img src="IMG_8587.png" alt="写真 5">
+        </div>
+      </div>
+    </section>
+
+    <footer>© 2026 — Made with care</footer>
+  </main>
+
+<script>
+  // イントロ演出の終了処理
+  const intro = document.getElementById('intro');
+  const main = document.getElementById('main');
+
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      intro.classList.add('leave');
+      main.classList.add('show');
+      setTimeout(() => { intro.style.display = 'none'; }, 950);
+    }, 2200);
+  });
+
+  // スクロールで画像を順番に表示
+  const frames = document.querySelectorAll('.frame');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.2 });
+
+  frames.forEach(f => observer.observe(f));
+</script>
+
+</body>
+</html>
